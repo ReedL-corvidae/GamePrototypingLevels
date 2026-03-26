@@ -1,4 +1,3 @@
-// JavaScript Document
 function Object()
 {
 	//object location
@@ -17,7 +16,7 @@ function Object()
 	this.color = "#c337dfff";
 	this.image = "test";
 	
-	//This draws the object to the screen
+	//draws the object to the screen
 	this.draw = function()
 	{
 		context.save();
@@ -31,7 +30,7 @@ function Object()
 		
 	}	
 	
-	//This changes the object position
+	//changes the object position
 	this.move = function()
 	{
 		this.x += this.vx;
