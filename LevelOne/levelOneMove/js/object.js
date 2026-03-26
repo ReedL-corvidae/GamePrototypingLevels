@@ -25,7 +25,7 @@ function Object()
 			context.translate(this.x, this.y);
 			context.beginPath();
             context.arc(0, 0, this.width/2, 0, 2 * Math.PI);
-            context.stroke();
+            context.closePath();
 			context.fill();
 		context.restore();
 		
