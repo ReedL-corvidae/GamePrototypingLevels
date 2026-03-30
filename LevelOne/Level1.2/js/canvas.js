@@ -8,9 +8,8 @@ var object;
 	context = canvas.getContext("2d");	
 	ball = new Ball();
 
-	object.vx = -10;
-	object.vy = 10;
-	object.image = document.getElementById("dvd");
+	ball.vx = 5;
+	ball.image = document.getElementById("dvd");
 
 	timer = setInterval(animate, interval);
 
@@ -18,8 +17,8 @@ function animate()
 {
 	context.clearRect(0,0,canvas.width, canvas.height);	
 	
-	//Movement using object's move() function
-	object.move();
+	//Movement using ball's move() function
+	ball.move();
 
 	ball.draw();
 }
