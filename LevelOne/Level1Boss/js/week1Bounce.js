@@ -9,11 +9,15 @@ var object;
 	canvas = document.getElementById("canvas");
 	context = canvas.getContext("2d");	
 	object = new Object();
+	ball = new Object();
 	
 	//Declare the object's speed on the x and y axis
 	object.vx = -10;
 	object.vy = 10;
 	object.image = document.getElementById("dvd");
+
+	ball.vx = -2;
+	ball.vy = -2;
 	
 	
 	timer = setInterval(animate, interval);
@@ -25,6 +29,7 @@ function animate()
 	
 	//Movement using object's move() function
 	object.move();
+	ball.move();
 	
 	
 	//Bouncing
@@ -50,6 +55,30 @@ function animate()
 		object.vy += Math.sign(object.vy) * 1;
 	}
 	
+	//Ball Object
+	if(ball.x > canvas.width - ball.width/2)
+	{
+		ball.vx = -ball.vx;
+		ball.vx += Math.sign(ball.vx) * 2;
+	}
+
+	if(ball.x < ball.width/2){
+		ball.vx *= -1;
+		ball.vx += Math.sign(ball.vx) * 2;
+	}
+
+	if(ball.y > canvas.height - ball.height/2)
+	{
+		ball.vy = -ball.vy;	
+		ball.vy += Math.sign(object.vy) * 2;
+	}
+
+	if(ball.y < ball.height/2){
+		ball.vy *= -1;
+		ball.vy += Math.sign(ball.vy) * 2;
+	}
+	
 	
 	object.draw();
+	ball.draw();
 }
