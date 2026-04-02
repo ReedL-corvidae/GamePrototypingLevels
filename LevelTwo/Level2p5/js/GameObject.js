@@ -12,11 +12,11 @@ function GameObject(x,y,w,h,color)
 		this.y = y;
 	
 	if(w == undefined)
-		this.width = 100;
+		this.width = 50;
 	else 
 		this.width = w;
 	if(h == undefined)
-		this.height = 100;
+		this.height = 50;
 	else 
 		this.height = h;
 	
@@ -37,8 +37,8 @@ function GameObject(x,y,w,h,color)
 	{
 		context.save();
 			context.fillStyle = "purple";
-			context.translate(0, this.y);
-			context.fillRect(0, (-this.height/2), 10, 150);
+			context.translate(this.x, this.y);
+			context.fillRect((-this.width/2), (-this.height/2), this.width, this.height);
 		context.restore();
 	}	
 	
@@ -63,6 +63,7 @@ function GameObject(x,y,w,h,color)
 		this.y += this.vy;
 	}
 
+	//Collision
 		this.left = function() 
 	{
 		return this.x - this.width/2;
@@ -93,5 +94,4 @@ function GameObject(x,y,w,h,color)
 		}
 		return false;
 	}
-
 }
