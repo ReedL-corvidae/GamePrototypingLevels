@@ -28,15 +28,15 @@ function animate()
 {
 	context.clearRect(0,0,canvas.width, canvas.height);	
 
-	// context.save();
-	// context.strokeStyle = "purple";
-	// context.beginPath();
-	// context.moveTo(canvas.width/2, canvas.height - 800);
-	// context.lineTo(canvas.width/2, canvas.height);
-	// context.closePath();
-	// context.lineWidth = 5;
-	// context.stroke();
-	// context.restore();
+	context.save();
+	context.strokeStyle = "purple";
+	context.beginPath();
+	context.moveTo(canvas.width/2, canvas.height - 800);
+	context.lineTo(canvas.width/2, canvas.height);
+	context.closePath();
+	context.lineWidth = 5;
+	context.stroke();
+	context.restore();
 
 	//Movement using ball's move() function
 	ball.move();
