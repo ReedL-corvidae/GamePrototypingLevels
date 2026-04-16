@@ -6,11 +6,12 @@ var timer;
 var interval = 1000/60;
 var player;
 var ball;
+var score = 0;
 
 //---------------Set Friction and Gravity-----------------
-var frictionX = .55;	
+var frictionX = .65;	
 var frictionY = .99;
-var gravity = 1;
+var gravity = .17;
 //--------------------------------------------------------
 
 
@@ -34,6 +35,8 @@ var gravity = 1;
 	
 	timer = setInterval(animate, interval);
 
+	ball.xy = 5;
+	ball.vy = 0;
 
 function animate()
 {
@@ -48,6 +51,21 @@ function animate()
 	
 	player.drawRect();
 	ball.drawCircle();
+
+	context.beginPath();
+
+	// Set a start-point
+	context.moveTo(player.x, player.y);
+
+	// Set an end-point
+	context.lineTo(ball.x, ball.y);
+
+	// Stroke it (Do the Drawing)
+	context.stroke();
+
+	context.fillstyle = "#555555"
+	context.font = "16px Arial";
+	context.fillText("Score: " + score,35,40);
 }
 
 
@@ -89,10 +107,12 @@ function showFriction()
 	
 	//--------------Apply friction to the Velocity-----------------------------------------
 	player.vx *= frictionX;
-	ball.vy *= frictionY;
+	//ball.vy *= frictionY;
+	//ball.vx *= frictionX;
 	//---------------------------------------------------------------------------------------
 	player.x += player.vx;
 	ball.y += ball.vy;
+	ball.x += ball.vx;
 
 	
 }
@@ -101,11 +121,11 @@ function showGravity()
 {
 		
 	//--------------Apply Gravity to the Velocity Y-----------------------------------------
-	ball.vy += gravity;
+	//ball.vy += gravity;
 	ball.y += ball.vy;
 	//---------------------------------------------------------------------------------------
 	
-	ball.vx *= frictionX;
+	//ball.vx *= ballFrictionX;
 	ball.x += ball.vx;
 }
 
@@ -136,43 +156,84 @@ function showPixelLock()
 function showBounce()
 {
 	
-	ball.vy *= frictionY;
-	ball.vx *= frictionX;
 	
-	ball.vy += gravity;
+	//ball.vx *= ballFrictionX;
+	
+	
 	
 	ball.x += ball.vx;
 	ball.y += ball.vy;
 	
 	//--------------------Check Collision------------------------------------------------------
 	
+	//Ball to Player Collision
+
+	if(ball.hitTestObject(player))
+	{
+		if(ball.x < player.x - player.width/3)
+		{
+			ball.vy = -7;
+			ball.vx = -ball.force * 5;
+		}
+		else if (ball.x < player.x - player.width/6){
+			ball.vy = -7;
+			ball.vx = -ball.force;
+		}
+		else if (ball.x < player.x + player.width/6)
+		{
+			ball.vx = 0;
+			ball.vy = -7;
+		}
+		else if (ball.x < player.x + player.width / 3){
+			ball.vy = -5;
+			ball.vx = ball.force;
+		}
+		else
+		{
+			ball.vy = -7;
+			ball.vx = ball.force * 5;
+		}
+		ball.y = player.y - ball.height / 2 - 1;
+		score++;
+		console.log(score);
+	}
+	
+
+	//Ball collision on Walls
 	if(ball.x > canvas.width - ball.width/2)
 	{
-		ball.x = ball.width - ball.width/2;
 		//the decimal is how bouncy you want the object to be
 		//It should be a number between 0 and 2;
-		ball.vx = -ball.vx * .99;
+		ball.x = canvas.width - ball.width/2;
+		ball.vx = -ball.vx * .8;
 	
 	}
 	//Bounce off left
 	if(ball.x < ball.width/2){
-		ball.x = canvas.width/2;
-		ball.y = canvas.height/2;
+		ball.x = ball.width/2;
+		ball.vx = -ball.vx * .8;
 	
 	}
 
 	if(ball.y > canvas.height - ball.height/2)
 	{
-		ball.y = canvas.height - ball.height/2;
 		//the decimal is how bouncy you want the object to be
 		//It should be a number between 0 and 2;
-		ball.vy = -ball.vy * .99;
+		ball.y = canvas.height - ball.height/2;
+		ball.vy = -ball.vy * .8;
+		score = 0;
+		console.log(score);
 	}
 
 	if(ball.y < ball.height/2){
-		ball.vy = ball.vy * .99;
+		ball.y = ball.height/2;
+		ball.vy = -ball.vy * .8;
 	}
 
+	ball.vy += gravity;
+	ball.vy *= frictionY;
+
+	//Player Collision on Walls
 	if(player.x > canvas.width - player.width/2)
 	{
 		
