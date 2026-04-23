@@ -5,7 +5,7 @@ var context;
 var timer;
 var interval;
 var player;
-var maxSpeed = 1;
+var maxSpeed = 4.5;
 
 
 	canvas = document.getElementById("canvas");
@@ -33,7 +33,20 @@ var maxSpeed = 1;
 		platform1.x = 0;
 		platform1.y = canvas.height - platform0.height/2;
 		platform1.color = "#ff0000";
-
+	
+	platform2 = new GameObject();
+		platform2.width = canvas.width/2;
+		platform2.height = platform0.height;
+		platform2.x = platform0.width/2;
+		platform2.y = canvas.height - platform0.height/2;
+		platform2.color = "#00ff";
+	
+	platform3 = new GameObject();
+		platform3.width = canvas.width/9;
+		platform3.height = platform0.height;
+		platform3.x = platform0.width/2;
+		platform3.y = canvas.height - platform0.height/2;
+		platform3.color = "#00ffff";
 
 	
 
@@ -52,25 +65,30 @@ function animate()
 
 	if(platform1.hitTestObject(platform0))
 	{
-		if((platform1.x < platform0.x - platform0.width/3) && space == true)
+		if((platform1.x < platform0.x - platform0.width/4) && space == true)
 		{
 			console.log("little damage 1");	
+			platform1.vx = 0;
 		}
-		else if ((platform1.x < platform0.x - platform0.width/6) && space == true)
+		else if ((platform1.x < platform0.x - platform0.width/18) && space == true)
 		{
 			console.log("middle damage 1");	
+			platform1.vx = 0;
 		}
-		else if ((platform1.x < platform0.x + platform0.width/100) && space == true)
+		else if ((platform1.x < platform0.x + platform0.width/20) && space == true)
 		{
 			console.log("big damage");	
+			platform1.vx = 0;
 		}
-		else if ((platform1.x < platform0.x + platform0.width / 3) && space == true)
+		else if ((platform1.x < platform0.x + platform0.width/4) && space == true)
 		{
 			console.log("middle damage 2");	
+			platform1.vx = 0;
 		}
 		else if (space == true)
 		{
-			console.log("little damage 2");	
+			console.log("little damage 2");
+			platform1.vx = 0;
 		}
 	}
 
@@ -88,6 +106,9 @@ function animate()
 	}
 
 	platform0.drawRect();
+	platform2.drawRect();
+	platform3.drawRect();
+
 	platform1.drawRect();
 
 
