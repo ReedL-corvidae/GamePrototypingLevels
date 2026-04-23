@@ -63,7 +63,7 @@ function animate()
 		}
 	}
 	//Player 2 ball collision
-		if(ball.hitTestObject(player2))
+	if(ball.hitTestObject(player2))
 	{
 		if(ball.y < player2.y - player2.height/6)
 		{
