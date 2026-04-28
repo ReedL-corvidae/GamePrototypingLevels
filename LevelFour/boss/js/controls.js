@@ -3,6 +3,7 @@ var a = false;
 var s = false;
 var d = false;
 var space = false;
+var canInput = true;
 
 
 document.addEventListener("keydown", press);
@@ -60,4 +61,9 @@ function release(e)
 	{
 		space = false;
 	}
+}
+
+if(canInput == false)
+{
+	space.disabled = true;
 }

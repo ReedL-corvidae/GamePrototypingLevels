@@ -5,7 +5,9 @@ var context;
 var timer;
 var interval;
 var player;
-var maxSpeed = 4.5;
+var maxSpeed = 5.5;
+var tempBossHealth = 1000;
+var actionUsed = false;
 
 
 	canvas = document.getElementById("canvas");
@@ -63,32 +65,39 @@ function animate()
 	platform1.move();
 
 
-	if(platform1.hitTestObject(platform0))
+		//Player times hits. Only hits ONCE. Function for turns would be added later to allow for later turns again.
+	if(platform1.hitTestObject(platform0) && space == true && !actionUsed)
 	{
-		if((platform1.x < platform0.x - platform0.width/4) && space == true)
+		actionUsed = true;
+		if((platform1.x < platform0.x - platform0.width/4))
 		{
-			console.log("little damage 1");	
 			platform1.vx = 0;
+			tempBossHealth = tempBossHealth - 25;
+			console.log("Health is " + tempBossHealth);
 		}
-		else if ((platform1.x < platform0.x - platform0.width/18) && space == true)
+		else if ((platform1.x < platform0.x - platform0.width/18))
 		{
-			console.log("middle damage 1");	
 			platform1.vx = 0;
+			tempBossHealth = tempBossHealth - 50;
+			console.log("Health is " + tempBossHealth);
 		}
-		else if ((platform1.x < platform0.x + platform0.width/20) && space == true)
+		else if ((platform1.x < platform0.x + platform0.width/20))
 		{
-			console.log("big damage");	
 			platform1.vx = 0;
+			tempBossHealth = tempBossHealth - 100;
+			console.log("Health is " + tempBossHealth);
 		}
-		else if ((platform1.x < platform0.x + platform0.width/4) && space == true)
+		else if ((platform1.x < platform0.x + platform0.width/4))
 		{
-			console.log("middle damage 2");	
 			platform1.vx = 0;
+			tempBossHealth = tempBossHealth - 50;
+			console.log("Health is " + tempBossHealth);
 		}
 		else if (space == true)
 		{
-			console.log("little damage 2");
 			platform1.vx = 0;
+			tempBossHealth = tempBossHealth - 25;
+			console.log("Health is " + tempBossHealth);
 		}
 	}
 
