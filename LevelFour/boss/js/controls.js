@@ -29,7 +29,7 @@ function press(e)
 	{
 		d = true;
 	}
-	if(e.keyCode == "space");
+	if(e.keyCode == 32);
 	{
 		space = true;
 	}
@@ -56,7 +56,7 @@ function release(e)
 	{
 		d = false;
 	}
-	if(e.keyCode == "space");
+	if(e.keyCode == 32);
 	{
 		space = false;
 	}
