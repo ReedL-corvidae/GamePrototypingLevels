@@ -142,6 +142,7 @@ states[0] = function()
 		context.fillText("This state holds the 'dodging' code. Press 'e' to dodge.", 50, 700);
 		context.fillText("This would be one variety of defense in a boss's attacks.", 50, 720);
 		context.fillText("In gameplay, the player would hit a button to swiftly move and dodge attacks.", 50, 740);
+		context.fillText("Known bug: When dodging at the edge of the canvas, player flickers. Looking into fixes.", 50, 760);
 	}
 
 		//Switches to next state
