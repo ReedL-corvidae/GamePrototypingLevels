@@ -5,6 +5,8 @@ var d = false;
 
 var arrowRight = false;
 var arrowLeft = false;
+var enter = false;
+var space = false;
 
 
 document.addEventListener("keydown", press);
@@ -39,6 +41,14 @@ function press(e)
 	{
 		arrowLeft = true;
 	}
+	if(e.keyCode == 13)
+	{
+		enter = true;
+	}
+	if(e.keyCode == 32)
+	{
+		space = true;
+	}
 }
 
 function release(e)
@@ -69,5 +79,13 @@ function release(e)
 	if(e.keyCode == 37)
 	{
 		arrowLeft = false;
+	}
+	if(e.keyCode == 13)
+	{
+		enter = false;
+	}
+	if(e.keyCode == 32)
+	{
+		space = false;
 	}
 }

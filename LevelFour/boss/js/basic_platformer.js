@@ -57,8 +57,6 @@ function animate()
 	
 	context.clearRect(0,0,canvas.width, canvas.height);	
 
-	//platform1.vx = maxSpeed;
-
 	platform1.x += Math.round(platform1.vx) * maxSpeed;
 
 
