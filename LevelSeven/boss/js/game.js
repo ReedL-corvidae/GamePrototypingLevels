@@ -217,6 +217,10 @@ states[2] = function()
 
 	setTimeout(inputWait, 200);
 
+
+	
+
+
 	if(arrowLeft && !waitToMove && !cannotMoveLeft)
 	{
 		
@@ -310,7 +314,12 @@ states[2] = function()
 	platform2.drawRect();
 	platform3.drawRect();
 
-	
+		context.font = "20px Georgia";
+		context.fillStyle = "#FFFFFF"
+		context.fillText("Read Enemy Stats", platform0.x/1.5, platform0.y);
+		context.fillText("Increase Speed", platform1.x/1.1, platform1.y);
+		context.fillText("Decrease Enemy Damage", platform2.x/1.78, platform2.y);
+		context.fillText("Slow Enemy Attacks", platform3.x/1.13, platform3.y);
 
 }
 states[3] = function()
@@ -340,18 +349,30 @@ states[5] = function()
 	if(actChoice == 1)
 	{
 		console.log("Reading the enemy stats");
+		context.font = "20px Georgia";
+		context.fillStyle = "#FFFFFF"
+		context.fillText("Enemy Stats", 50, 450);
 	}
 	if(actChoice == 2)
 	{
 		console.log("player has speed buff");
+		context.font = "20px Georgia";
+		context.fillStyle = "#FFFFFF"
+		context.fillText("Speed Buff Granted", 50, 450);
 	}
 	if(actChoice == 3)
 	{
 		console.log("enemy deals less damage");
+		context.font = "20px Georgia";
+		context.fillStyle = "#FFFFFF"
+		context.fillText("Enemy deals less damage", 50, 450);
 	}
 	if(actChoice == 4)
 	{
 		console.log("enemy attacks are slower!");
+		context.font = "20px Georgia";
+		context.fillStyle = "#FFFFFF"
+		context.fillText("Enemy attacks slowed", 50, 450);
 	}
 
 	setTimeout(changeToFight, 5000);
@@ -387,6 +408,8 @@ changeToFight = function()
 		platform3.x = platform0.width/2;
 		platform3.y = canvas.height - platform0.height/2;
 		platform3.color = "#00ffff";
+
+		context.fillStyle = "#000000"
 
 	currentState = 4;
 }
