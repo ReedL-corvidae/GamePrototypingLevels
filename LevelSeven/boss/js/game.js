@@ -74,30 +74,29 @@ platform0 = new GameObject();
 
 states[0] = function()
 {
-
-	console.log(tempBossHealth);
+	
 	choice.drawRect();
 	player.drawRect();
-	console.log("player choice state");
-	console.log(cannotMoveRight);
-	console.log(cannotMoveLeft);
 
 	context.font = "20px Georgia";
 	context.fillText("Left and Right arrow keys to move. Enter to choose.", 50, 50);
+
 		//Movement. Intentionally not smooth.
 	if(arrowLeft && !waitToMove && !cannotMoveLeft)
 	{
-		
-		player.x = player.x - player.width;
+		console.log("test left");
 		waitToMove = true;
 		setTimeout(moveValid, 100);
+		player.x = player.x - player.width;
+		
 	}
 	if(arrowRight && !waitToMove && !cannotMoveRight)
 	{
-		
-		player.x = player.x + player.width;
+		console.log("test right");
 		waitToMove = true;
 		setTimeout(moveValid, 100);
+		player.x = player.x + player.width;
+		
 	}
 
 		//Prevent player from moving if in a certain area.
@@ -216,9 +215,6 @@ states[2] = function()
 	console.log("Act state");
 
 	setTimeout(inputWait, 200);
-
-
-	
 
 
 	if(arrowLeft && !waitToMove && !cannotMoveLeft)
@@ -415,7 +411,6 @@ changeToFight = function()
 }
 changeToPlayer = function()
 {
-	currentState = 0;
 	player.width = canvas.width/3;
 	player.height = canvas.width/4;
 	player.x = canvas.width/2;
@@ -427,6 +422,7 @@ changeToPlayer = function()
 	choice.x = canvas.width/2;
 	choice.y = canvas.height;
 	choice.color = "#00ff00";
+	currentState = 0;
 }
 
 changeToState2Var = function()
