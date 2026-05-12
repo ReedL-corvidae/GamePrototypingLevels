@@ -16,6 +16,7 @@ var bossDamage = 10;
 var timeFight = 5000;
 
 var actChoice;
+var fightStarted = false;
 
 var waitToMove;
 var actionUsed;
@@ -74,7 +75,7 @@ platform0 = new GameObject();
 
 states[0] = function()
 {
-	
+
 	choice.drawRect();
 	player.drawRect();
 
@@ -327,6 +328,15 @@ states[3] = function()
 
 states[4] = function()
 {
+
+	//End of this would remove buffs/debuffs. Obviously cant yet... as theres no fight to alter!
+	if(!fightStarted)
+	{
+		fightStarted = true;
+		setTimeout(changeToPlayer, timeFight);
+	}
+	
+
 	context.font = "20px Georgia";
 	context.fillText("Active Fighting state", 50, 50);
 	console.log("This would be the fighting state.");
@@ -334,8 +344,7 @@ states[4] = function()
 
 
 
-	//End of this would remove buffs/debuffs. Obviously cant yet... as theres no fight to alter!
-	setTimeout(changeToPlayer, timeFight);
+	
 }
 
 	//Act print screen
@@ -373,12 +382,10 @@ states[5] = function()
 
 	setTimeout(changeToFight, 5000);
 }
-
 moveValid = function()
 {
 	waitToMove = false;
 }
-
 changeToFight = function()
 {
 	platform1.vx = maxSpeed;
