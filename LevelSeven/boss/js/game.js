@@ -13,7 +13,7 @@ var tempBossHealth = 1000;
 var playerHealth = 100;
 var bossDamage = 10;
 
-var timeFight = 5000;
+var timeFight = 5000; // this will eventually be a randomised time
 
 var actChoice;
 var fightStarted = false;
@@ -75,17 +75,16 @@ platform0 = new GameObject();
 
 states[0] = function()
 {
-
-	choice.drawRect();
-	player.drawRect();
-
 	context.font = "20px Georgia";
 	context.fillText("Left and Right arrow keys to move. Enter to choose.", 50, 50);
+
+	
+	choice.drawRect();
+	player.drawRect();
 
 		//Movement. Intentionally not smooth.
 	if(arrowLeft && !waitToMove && !cannotMoveLeft)
 	{
-		console.log("test left");
 		waitToMove = true;
 		setTimeout(moveValid, 100);
 		player.x = player.x - player.width;
@@ -93,7 +92,6 @@ states[0] = function()
 	}
 	if(arrowRight && !waitToMove && !cannotMoveRight)
 	{
-		console.log("test right");
 		waitToMove = true;
 		setTimeout(moveValid, 100);
 		player.x = player.x + player.width;
@@ -311,12 +309,12 @@ states[2] = function()
 	platform2.drawRect();
 	platform3.drawRect();
 
-		context.font = "20px Georgia";
-		context.fillStyle = "#FFFFFF"
-		context.fillText("Read Enemy Stats", platform0.x/1.5, platform0.y);
-		context.fillText("Increase Speed", platform1.x/1.1, platform1.y);
-		context.fillText("Decrease Enemy Damage", platform2.x/1.78, platform2.y);
-		context.fillText("Slow Enemy Attacks", platform3.x/1.13, platform3.y);
+	context.font = "20px Georgia";
+	context.fillStyle = "#FFFFFF"
+	context.fillText("Read Enemy Stats", platform0.x/1.5, platform0.y);
+	context.fillText("Increase Speed", platform1.x/1.1, platform1.y);
+	context.fillText("Decrease Enemy Damage", platform2.x/1.78, platform2.y);
+	context.fillText("Slow Enemy Attacks", platform3.x/1.13, platform3.y);
 
 }
 states[3] = function()
@@ -328,23 +326,18 @@ states[3] = function()
 
 states[4] = function()
 {
-
+	
 	//End of this would remove buffs/debuffs. Obviously cant yet... as theres no fight to alter!
 	if(!fightStarted)
 	{
 		fightStarted = true;
 		setTimeout(changeToPlayer, timeFight);
 	}
-	
 
 	context.font = "20px Georgia";
 	context.fillText("Active Fighting state", 50, 50);
 	console.log("This would be the fighting state.");
 	console.log(tempBossHealth);
-
-
-
-	
 }
 
 	//Act print screen
@@ -380,7 +373,7 @@ states[5] = function()
 		context.fillText("Enemy attacks slowed", 50, 450);
 	}
 
-	setTimeout(changeToFight, 5000);
+	setTimeout(changeToFight, 3000);
 }
 moveValid = function()
 {
@@ -429,7 +422,9 @@ changeToPlayer = function()
 	choice.x = canvas.width/2;
 	choice.y = canvas.height;
 	choice.color = "#00ff00";
+	fightStarted = false;
 	currentState = 0;
+	
 }
 
 changeToState2Var = function()
