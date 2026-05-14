@@ -9,6 +9,8 @@ var arrowUp = false;
 var arrowDown = false;
 var enter = false;
 var space = false;
+var backspace = false;
+var keye = false;
 
 document.addEventListener("keydown", press);
 document.addEventListener("keyup", release);
@@ -58,6 +60,14 @@ function press(e)
 	{
 		space = true;
 	}
+	if(e.keyCode == 8)
+	{
+		backspace = true;
+	}
+	if(e.keyCode == 69)
+	{
+		keye = true;
+	}
 }
 
 function release(e)
@@ -104,5 +114,13 @@ function release(e)
 	if(e.keyCode == 32)
 	{
 		space = false;
+	}
+	if(e.keyCode == 8)
+	{
+		backspace = false;
+	}
+	if(e.keyCode == 69)
+	{
+		keye = false;
 	}
 }
