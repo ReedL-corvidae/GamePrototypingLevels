@@ -14,6 +14,8 @@ var bossAttackNumbers = 20;
 
 var frictionX = .8;	
 var frictionY = .8;
+var gravity = 0;
+var angle = 0;
 
 var playerPrevY;
 var playerPrevX;
@@ -97,6 +99,22 @@ platform0 = new GameObject();
 		shield.x = player.x;
 		shield.y = player.y - 20
 
+	gun = new GameObject()
+		gun.x = 200;
+		gun.y = 200;
+		gun.width = 25;
+		gun.color = "blue";
+	gun2 = new GameObject()
+		gun2.x = 500;
+		gun2.y = 700;
+		gun2.width = 25;
+		gun2.color = "green";
+	gun3 = new GameObject()
+		gun3.x = 700;
+		gun3.y = 200;
+		gun3.width = 25;
+		gun3.color = "red";
+
 	tempBullet = new GameObject();
 		tempBullet.width = 10;
 		tempBullet.height = 10;
@@ -104,6 +122,22 @@ platform0 = new GameObject();
 		tempBullet.y = 10;
 		tempBullet.vy = 5;
 		tempBullet.vx = 0;
+	tempBullet2 = new GameObject();
+		tempBullet2.width = 10;
+		tempBullet2.height = 10;
+		tempBullet2.x = gun2.x;
+		tempBullet2.y = gun2.y;
+		tempBullet2.vx = Math.cos(gun.angle * Math.PI/180) * 5;
+		tempBullet2.vy = Math.sin(gun.angle * Math.PI/180) * 5;
+	tempBullet3 = new GameObject();
+		tempBullet3.width = 10;
+		tempBullet3.height = 10;
+		tempBullet3.x = gun3.x;
+		tempBullet3.y = gun3.y;
+		tempBullet3.vx = Math.cos(gun.angle * Math.PI/180) * 5;
+		tempBullet3.vy = Math.sin(gun.angle * Math.PI/180) * 5;
+
+	canvasTrigger = new GameObject({width:canvas.width, height:canvas.height});
 
 
 states[0] = function()
@@ -838,27 +872,213 @@ states[4] = function()
 	else if(fightOption >= 2 && fightOption < 3)
 	{
 
-	}
-	else if(fightOption >= 3 && fightOption < 4)
-	{
+		point(player, gun);
+		point(player, gun2);
+		point(player, gun3);
 
-	}
+		tempBullet.move();
+		tempBullet2.move();
+		tempBullet3.move();
+
+		player.drawRect();
+		gun.drawTriangle();
+		gun2.drawTriangle();
+		gun3.drawTriangle();
+
+		tempBullet.drawCircle();
+		tempBullet2.drawCircle();
+		tempBullet3.drawCircle();
+	
+		if(tempBullet.hitTestObject(player))
+		{
+			if(!playerImmunity)
+			{
+				playerHealth = playerHealth - bossDamage;
+				playerImmunity = true;
+				tempBullet.x = gun.x;
+				tempBullet.y = gun.y;
+				console.log(playerHealth);
+
+				setTimeout(playerImmune, 300);
+			}
+		}
+		if(tempBullet2.hitTestObject(player))
+		{
+			if(!playerImmunity)
+			{
+				playerHealth = playerHealth - bossDamage;
+				playerImmunity = true;
+				tempBullet2.x = gun2.x;
+				tempBullet2.y = gun2.y;
+				console.log(playerHealth);
+
+				setTimeout(playerImmune, 300);
+			}
+		}
+		if(tempBullet3.hitTestObject(player))
+		{
+			if(!playerImmunity)
+			{
+				playerHealth = playerHealth - bossDamage;
+				playerImmunity = true;
+				tempBullet3.x = gun3.x;
+				tempBullet3.y = gun3.y;
+				console.log(playerHealth);
+
+				setTimeout(playerImmune, 300);
+			}
+		}
+
+		
+		if(tempBullet.hitTestObject(canvasTrigger) == false)
+		{
+			tempBullet.x = gun.x;
+			tempBullet.y = gun.y;
+		}
+		if(tempBullet.x == gun.x && tempBullet.y == gun.y)
+		{
+			tempBullet.vx = Math.cos(gun.angle * Math.PI/180) * 15;
+			tempBullet.vy = Math.sin(gun.angle * Math.PI/180) * 15;
+		}
+
+		if(tempBullet2.hitTestObject(canvasTrigger) == false)
+		{
+			tempBullet2.x = gun2.x;
+			tempBullet2.y = gun2.y;
+		}
+		if(tempBullet2.x == gun2.x && tempBullet2.y == gun2.y)
+		{
+			tempBullet2.vx = Math.cos(gun2.angle * Math.PI/180) * 15;
+			tempBullet2.vy = Math.sin(gun2.angle * Math.PI/180) * 15;
+		}
+
+		if(tempBullet3.hitTestObject(canvasTrigger) == false)
+		{
+			tempBullet3.x = gun3.x;
+			tempBullet3.y = gun3.y;
+		}
+		if(tempBullet3.x == gun3.x && tempBullet3.y == gun3.y)
+		{
+			tempBullet3.vx = Math.cos(gun3.angle * Math.PI/180) * 15;
+			tempBullet3.vy = Math.sin(gun3.angle * Math.PI/180) * 15;
+		}
+	
+	//No leaving the screen for the player
+		if((player.y > canvas.height - player.height/2) || (player.y < player.height/2))
+		{
+			player.y = playerPrevY;	
+			player.vy = 0;
+		}
+		else
+		{
+			playerPrevY = player.y;
+		}
+		if((player.x > canvas.width - player.width/2) || (player.x < player.width/2))
+		{
+			player.x = playerPrevX;	
+			player.vx = 0;
+		}
+		else
+		{
+			playerPrevX = player.x;
+		}
+
+			//Controls player
+		if(d)
+		{	
+			player.vx +=  player.ax * player.force;
+		}
+		if(a)
+		{
+			player.vx += player.ax * -player.force;
+		}
+		if(w)
+		{	
+			player.vy += player.ay * -player.force;
+		}
+		if(s)
+		{
+			player.vy += player.ay * player.force;
+		}
+
+			//The dodge mechanic
+			//Looks at diagnols first to prioritise them.
+		if(keye)
+		{
+			playerImmunity = true;
+			setTimeout(playerImmune, 100);
+			if (w && a)
+			{
+				player.x = player.x - 10;
+				player.y = player.y - 10;
+			}
+			else if (w && d)
+			{
+				player.x = player.x + 10;
+				player.y = player.y - 10;
+			}
+			else if (s && a)
+			{
+				player.x = player.x - 10;
+				player.y = player.y + 10;
+			}
+			else if (s && d)
+			{
+				player.x = player.x + 10;
+				player.y = player.y + 10;
+			}
+			else if(w)
+			{
+				player.y = player.y - 20;
+			}
+			else if(s)
+			{
+				player.y = player.y + 20;
+			}
+			else if(d)
+			{
+				player.x = player.x + 20;
+			}
+			else if(a)
+			{
+				player.x = player.x - 20;
+			}
+			
+		}
+
+			//Friction and acceleration and pixel lock
+		player.vx *= frictionX;
+		player.x += player.vx;
+
+		player.vy *= frictionY;
+		player.y += player.vy;
+
+		player.y += Math.round(player.vy);
+		player.x += Math.round(player.vx);
+
+			//idle things shoot you
+		}
+		else if(fightOption >= 3 && fightOption < 4)
+		{
+			//follow thing
+
+		}
 		else if(fightOption >= 4 && fightOption < 5)
-	{
+		{
+			//lines thing
+		}
+		else if (fightOption >= 5 && fightOption <= 6)
+		{
 
-	}
-	else if (fightOption >= 5 && fightOption <= 6)
-	{
+		}
+		else
+		{
+				console.log("...How'd you get here...");
+		}
 
-	}
-	else
-	{
-			console.log("...How'd you get here...");
-	}
-
-	context.font = "20px Georgia";
-	context.fillText("Active Fighting state", 50, 50);
-	console.log(tempBossHealth);
+		context.font = "20px Georgia";
+		context.fillText("Active Fighting state", 50, 50);
+		console.log(tempBossHealth);
 }
 
 	//Act print screen
@@ -1041,19 +1261,32 @@ adjustPerAttack = function()
 	}
 	else if(fightOption >= 2 && fightOption < 3)
 	{
+		player.width = 20;
+		player.height = 20;
+		player.x = canvas.width/2;
+		player.y = canvas.height/2;
 
+		gun.angle = 40;
+		tempBullet.x = gun.x;
+		tempBullet.y = gun.y;
+		tempBullet.vx = Math.cos(gun.angle * Math.PI/180) * 5;
+		tempBullet.vy = Math.sin(gun.angle * Math.PI/180) * 5;
+
+		gun2.angle = -90;
+		tempBullet2.x = gun2.x;
+		tempBullet2.y = gun2.y;
+		tempBullet2.vx = Math.cos(gun2.angle * Math.PI/180) * 5;
+		tempBullet2.vy = Math.sin(gun2.angle * Math.PI/180) * 5;
+	
+		gun3.angle = 140;
+		tempBullet3.x = gun3.x;
+		tempBullet3.y = gun3.y;
+		tempBullet3.vx = Math.cos(gun3.angle * Math.PI/180) * 5;
+		tempBullet3.vy = Math.sin(gun3.angle * Math.PI/180) * 5;
 	}
-	else if(fightOption >= 3 && fightOption < 4)
+	else if(fightOption >= 3 && fightOption <= 4)
 	{
-
-	}
-	else if(fightOption >= 4 && fightOption < 5)
-	{
-
-	}
-	else if (fightOption >= 5 && fightOption <= 6)
-	{
-
+		console.log("third attack")
 	}
 }
 
@@ -1092,7 +1325,7 @@ changeToFight = function()
 	platform1.vx = maxSpeed;
 	actionUsed = false;
 	canHeal = true;
-	fightOption = 0;
+	fightOption = rand(0, 3);
 	adjustPerAttack();
 
 	platform0.width = canvas.width;
@@ -1198,6 +1431,18 @@ function animate()
 	context.clearRect(0,0,canvas.width, canvas.height);
 	
 	states[currentState]();
+}
+
+function point(pl, g)
+{
+	var dx = pl.x - g.x;
+	var dy = pl.y - g.y;
+	
+	var dist = Math.sqrt(dx * dx + dy * dy);
+	
+	var radians = Math.atan2(dy, dx);
+	
+	g.angle = radians * 180/Math.PI;
 }
 
 
