@@ -1,13 +1,19 @@
 
 var canvas = document.getElementById("canvas");
+	canvas.addEventListener("mousemove", track);
+	canvas.addEventListener("click", startGame);
+
 var context = canvas.getContext("2d");
 
 var interval = 1000/60;
 var timer = setInterval(animate, interval);
 
-var currentState = 0;
+var mouse = {x:0,y:0};
+
+var currentState = 8;
 var states = [];
 
+var hit = false;
 var direction;
 var bulletSpeed = 12;
 var bossAttackNumbers = 20;
@@ -21,9 +27,10 @@ var playerPrevY;
 var playerPrevX;
 
 var bossSpeedDebuff = false;
+var dodge = 10;
 
 var maxSpeed = 5.5;
-var tempBossHealth = 1000;
+var tempBossHealth = 500;
 var playerHealth = 100;
 var bossDamage = 10;
 var fightOption;
@@ -33,6 +40,7 @@ var timeFight = rand(15000, 30000); // this will eventually be a randomised time
 var actChoice;
 var fightStarted = false;
 
+var actingUp = false;
 var waitToMove;
 var actionUsed;
 var inputValid = true;
@@ -46,6 +54,8 @@ var cannotMoveDown;
 var heal1 = true, heal2 = true, heal3 = true, heal4 = true;
 
 var bullets = [];
+
+var square = new GameObject({width:50, height:50, x:canvas.width/2, y:canvas.height - 200, color:"orange"})
 
 //State 0
 player = new GameObject();
@@ -143,8 +153,8 @@ platform0 = new GameObject();
 states[0] = function()
 {
 	context.font = "20px Georgia";
-	context.fillText("Left and Right arrow keys to move. Enter to choose.", 50, 50);
-
+	context.fillStyle = "#000000"
+	context.fillText("Health: " + playerHealth, 450, 660);
 	
 	choice.drawRect();
 	player.drawRect();
@@ -203,15 +213,14 @@ states[0] = function()
 		}
 	}
 
+	context.fillText("ACT", 480, 740);
+	context.fillText("HEAL", 800, 740);
+	context.fillText("FIGHT", 130, 740);
 }
 states[1] = function()
 {
 	
 	console.log("Attack state");
-
-	context.clearRect(0,0,canvas.width, canvas.height);	
-	context.font = "20px Georgia";
-	context.fillText("Attack state", 50, 50);
 
 	
 	platform1.x += Math.round(platform1.vx) * maxSpeed;
@@ -380,9 +389,13 @@ states[2] = function()
 	platform3.drawRect();
 
 	context.font = "20px Georgia";
+	context.fillStyle = "#000000"
+	context.fillText("Health: " + playerHealth, 450, 370);
+
+	context.font = "20px Georgia";
 	context.fillStyle = "#FFFFFF"
 	context.fillText("Read Enemy Stats", platform0.x/1.5, platform0.y);
-	context.fillText("Increase Speed", platform1.x/1.1, platform1.y);
+	context.fillText("Increase Dodge", platform1.x/1.1, platform1.y);
 	context.fillText("Decrease Enemy Damage", platform2.x/1.78, platform2.y);
 	context.fillText("Slow Enemy Attacks", platform3.x/1.13, platform3.y);
 
@@ -395,12 +408,16 @@ states[2] = function()
 }
 states[3] = function()
 {
-	context.font = "20px Georgia";
-	context.fillText("Healing items state", 50, 50);
 	console.log("Heal Items state");
 
 	setTimeout(inputWait, 200);
 
+
+	if(backspace)
+	{
+		changeToPlayer();
+		currentState = 0;
+	}
 
 	if(arrowLeft && !waitToMove && !cannotMoveLeft)
 	{
@@ -495,6 +512,10 @@ states[3] = function()
 	platform2.drawRect();
 	platform3.drawRect();
 
+	context.font = "20px Georgia";
+	context.fillStyle = "#000000"
+	context.fillText("Health: " + playerHealth, 450, 370);
+
 	context.fillStyle = "#FFFFFF"
 
 	if(heal1)
@@ -550,7 +571,7 @@ states[4] = function()
 		setTimeout(changeToPlayer, timeFight);
 	}
 
-	if(tempBossHealth == 0 || playerHealth == 0)
+	if(tempBossHealth <= 0 || playerHealth <= 0)
 	{
 		console.log("Wuhoh");
 		currentState = 7;
@@ -559,8 +580,7 @@ states[4] = function()
 	if(fightOption >= 0 && fightOption < 1)
 	{
 
-		player.color = "rgba(214, 18, 51, 0.2)"
-		player.drawRect();
+		changeColorBack();
 
 		if(tempBullet.hitTestObject(player))
 		{
@@ -570,7 +590,15 @@ states[4] = function()
 				playerImmunity = true;
 				console.log(playerHealth);
 
-				setTimeout(playerImmune, 100);
+				setTimeout(playerImmune, 500);
+				hit = true;
+				if(hit)
+				{
+					player.color = "red";
+					setTimeout(changeColorBack, 500);
+					hit = false;
+					console.log("IT SHOULD CHANGE COLORS DAMMIT");
+				}
 			}
 		}
 
@@ -619,6 +647,14 @@ states[4] = function()
 				console.log(playerHealth);
 
 				setTimeout(playerImmune, 500);
+				hit = true;
+				if(hit)
+				{
+					player.color = "red";
+					setTimeout(changeColorBack, 500);
+					hit = false;
+					console.log("IT SHOULD CHANGE COLORS DAMMIT");
+				}
 			}
 		}
 	}
@@ -669,39 +705,39 @@ states[4] = function()
 			setTimeout(playerImmune, 100);
 			if (w && a)
 			{
-				player.x = player.x - 10;
-				player.y = player.y - 10;
+				player.x = player.x - dodge;
+				player.y = player.y - dodge;
 			}
 			else if (w && d)
 			{
-				player.x = player.x + 10;
-				player.y = player.y - 10;
+				player.x = player.x + dodge;
+				player.y = player.y - dodge;
 			}
 			else if (s && a)
 			{
-				player.x = player.x - 10;
-				player.y = player.y + 10;
+				player.x = player.x - dodge;
+				player.y = player.y + dodge;
 			}
 			else if (s && d)
 			{
-				player.x = player.x + 10;
-				player.y = player.y + 10;
+				player.x = player.x + dodge;
+				player.y = player.y + dodge;
 			}
 			else if(w)
 			{
-				player.y = player.y - 20;
+				player.y = player.y - dodge * 2;
 			}
 			else if(s)
 			{
-				player.y = player.y + 20;
+				player.y = player.y + dodge * 2;
 			}
 			else if(d)
 			{
-				player.x = player.x + 20;
+				player.x = player.x + dodge * 2;
 			}
 			else if(a)
 			{
-				player.x = player.x - 20;
+				player.x = player.x - dodge * 2;
 			}
 			
 		}
@@ -716,11 +752,11 @@ states[4] = function()
 		player.y += Math.round(player.vy);
 		player.x += Math.round(player.vx);
 
-
+		player.drawRect();
 	}
 	else if(fightOption >= 1 && fightOption < 2)
 	{
-			player.color = "rgba(40, 163, 126, 0.2)"
+		changeColorBack();
 
 		tempBullet.move();
 		
@@ -737,6 +773,14 @@ states[4] = function()
 		{
 			if(!playerImmunity)
 			{
+				hit = true;
+				if(hit)
+				{
+					player.color = "red";
+					setTimeout(changeColorBack, 100);
+					hit = false;
+					console.log("IT SHOULD CHANGE COLORS DAMMIT");
+				}
 				playerHealth = playerHealth - bossDamage;
 				playerImmunity = true;
 				console.log(playerHealth);
@@ -869,9 +913,10 @@ states[4] = function()
 			shield.y = player.y - 20;
 		}
 	}
-	else if(fightOption >= 2 && fightOption < 3)
+	else if(fightOption >= 2 && fightOption <= 3)
 	{
 
+		changeColorBack();
 		point(player, gun);
 		point(player, gun2);
 		point(player, gun3);
@@ -880,7 +925,6 @@ states[4] = function()
 		tempBullet2.move();
 		tempBullet3.move();
 
-		player.drawRect();
 		gun.drawTriangle();
 		gun2.drawTriangle();
 		gun3.drawTriangle();
@@ -893,6 +937,14 @@ states[4] = function()
 		{
 			if(!playerImmunity)
 			{
+				hit = true;
+				if(hit)
+				{
+					player.color = "red";
+					setTimeout(changeColorBack, 300);
+					hit = false;
+					console.log("IT SHOULD CHANGE COLORS DAMMIT");
+				}
 				playerHealth = playerHealth - bossDamage;
 				playerImmunity = true;
 				tempBullet.x = gun.x;
@@ -906,6 +958,14 @@ states[4] = function()
 		{
 			if(!playerImmunity)
 			{
+				hit = true;
+				if(hit)
+				{
+					player.color = "red";
+					setTimeout(changeColorBack, 300);
+					hit = false;
+					console.log("IT SHOULD CHANGE COLORS DAMMIT");
+				}
 				playerHealth = playerHealth - bossDamage;
 				playerImmunity = true;
 				tempBullet2.x = gun2.x;
@@ -919,6 +979,14 @@ states[4] = function()
 		{
 			if(!playerImmunity)
 			{
+				hit = true;
+				if(hit)
+				{
+					player.color = "red";
+					setTimeout(changeColorBack, 300);
+					hit = false;
+					console.log("IT SHOULD CHANGE COLORS DAMMIT");
+				}
 				playerHealth = playerHealth - bossDamage;
 				playerImmunity = true;
 				tempBullet3.x = gun3.x;
@@ -1009,39 +1077,39 @@ states[4] = function()
 			setTimeout(playerImmune, 100);
 			if (w && a)
 			{
-				player.x = player.x - 10;
-				player.y = player.y - 10;
+				player.x = player.x - dodge;
+				player.y = player.y - dodge;
 			}
 			else if (w && d)
 			{
-				player.x = player.x + 10;
-				player.y = player.y - 10;
+				player.x = player.x + dodge;
+				player.y = player.y - dodge;
 			}
 			else if (s && a)
 			{
-				player.x = player.x - 10;
-				player.y = player.y + 10;
+				player.x = player.x - dodge;
+				player.y = player.y + dodge;
 			}
 			else if (s && d)
 			{
-				player.x = player.x + 10;
-				player.y = player.y + 10;
+				player.x = player.x + dodge;
+				player.y = player.y + dodge;
 			}
 			else if(w)
 			{
-				player.y = player.y - 20;
+				player.y = player.y - dodge * 2;
 			}
 			else if(s)
 			{
-				player.y = player.y + 20;
+				player.y = player.y + dodge * 2;
 			}
 			else if(d)
 			{
-				player.x = player.x + 20;
+				player.x = player.x + dodge * 2;
 			}
 			else if(a)
 			{
-				player.x = player.x - 20;
+				player.x = player.x - dodge * 2;
 			}
 			
 		}
@@ -1055,29 +1123,16 @@ states[4] = function()
 
 		player.y += Math.round(player.vy);
 		player.x += Math.round(player.vx);
-
+		player.drawRect();
 			//idle things shoot you
-		}
-		else if(fightOption >= 3 && fightOption < 4)
-		{
-			//follow thing
-
-		}
-		else if(fightOption >= 4 && fightOption < 5)
-		{
-			//lines thing
-		}
-		else if (fightOption >= 5 && fightOption <= 6)
-		{
-
-		}
+	}
 		else
 		{
 				console.log("...How'd you get here...");
 		}
 
 		context.font = "20px Georgia";
-		context.fillText("Active Fighting state", 50, 50);
+		context.fillText("Health: " + playerHealth, 50, 50);
 		console.log(tempBossHealth);
 }
 
@@ -1090,14 +1145,18 @@ states[5] = function()
 		console.log("Reading the enemy stats");
 		context.font = "20px Georgia";
 		context.fillStyle = "#FFFFFF"
-		context.fillText("Enemy Stats", 50, 450);
+		context.fillText("Enemy Health: " + tempBossHealth, 50, 450);
+		context.fillText("Enemy Damage: " + bossDamage, 50, 470);
+		context.fillText("A terrifying placeholder boss!!!", 50, 500);
 	}
 	if(actChoice == 2)
 	{
-		console.log("player has speed buff");
+		console.log("player has dodge buff");
 		context.font = "20px Georgia";
 		context.fillStyle = "#FFFFFF"
-		context.fillText("Speed Buff Granted", 50, 450);
+		context.fillText("Dodge buffed", 50, 450);
+
+		dodge = 16;
 	}
 	if(actChoice == 3)
 	{
@@ -1105,6 +1164,8 @@ states[5] = function()
 		context.font = "20px Georgia";
 		context.fillStyle = "#FFFFFF"
 		context.fillText("Enemy deals less damage", 50, 450);
+
+		bossDamage = 5;
 	}
 	if(actChoice == 4)
 	{
@@ -1115,8 +1176,13 @@ states[5] = function()
 		bossSpeedDebuff = true;
 	}
 
-	setTimeout(changeToFight, 3000);
+	if(!actingUp)
+	{
+		setTimeout(changeToFight, 3000);
+		actingUp = true;
+	}
 }
+	//healing outputs
 states[6] = function()
 {
 	choice.drawRect();
@@ -1196,21 +1262,70 @@ states[6] = function()
 
 	
 	console.log(playerHealth);
-	setTimeout(changeToFight, 3000);
+	if(!actingUp)
+	{
+		setTimeout(changeToFight, 3000);
+		actingUp = true;
+	}
+	
 }
+	//win/lose screen
 states[7] = function()
 {
+	context.fillStyle = "#000000"
 	console.log("Win/Lose screen.");
+
+	if(tempBossHealth <= 0)
+	{
+		context.font = "20px Georgia";
+		context.fillText("You won! Reload to try again!", 360, 200);
+	}
+
+	if(playerHealth <= 0)
+	{
+		context.font = "20px Georgia";
+		context.fillText("You lost... Reload to try again!", 360, 200);
+	}
 }
 states[8] = function()
 {
 	console.log("start screen");
+
+	context.font = "20px Georgia";
+	context.fillText("Game Prototype", 420, 200);
+	context.fillText("Click 'e' for more information!", 360, 240);
+	context.fillText("When ready, click the orange square to start.", 300, 280);
+
+	if(keye)
+	{
+		currentState = 9;
+	}
+	square.drawRect();
 }
 states[9] = function()
 {
-	console.log("Instructions screen");
-}
+	context.font = "20px Georgia";
+	context.fillText("Controls: ", 70, 100);
+	context.fillText("- Press 'enter' to select a choice", 100, 140);
+	context.fillText("- Press 'space' to time your attack", 100, 170);
+	context.fillText("- Use WASD to move your player or shield.", 100, 200);
+	context.fillText("- Press 'e' to dodge.", 100, 230);
 
+	context.fillText("Gameplay: ", 70, 400);
+	context.fillText("- Defeat the boss and win! Utitlise quick reaction times to both do damage and survive!", 100, 440);
+	context.fillText("- You are equipt with a limited healing supply to support yourself, use these carefully!", 100, 470);
+	context.fillText("- At the cost of a turn, you can give yourself a buff, debuff the enemy,", 100, 500);
+	context.fillText("or check on the enemy's current status.", 100, 530);
+	context.fillText("- Careful! The boss can use upwards of 3 different attacks! Any could be next!", 100, 560);
+
+	context.fillText("If you're done reading. Hit 'backspace' to return to the main menu.", 100, 700);
+
+	if(backspace)
+	{
+		currentState = 8;
+	}
+
+}	
 adjustPerAttack = function()
 {
 	if(fightOption >= 0 && fightOption < 1)
@@ -1259,7 +1374,7 @@ adjustPerAttack = function()
 
 	
 	}
-	else if(fightOption >= 2 && fightOption < 3)
+	else if(fightOption >= 2 && fightOption <= 3)
 	{
 		player.width = 20;
 		player.height = 20;
@@ -1283,10 +1398,6 @@ adjustPerAttack = function()
 		tempBullet3.y = gun3.y;
 		tempBullet3.vx = Math.cos(gun3.angle * Math.PI/180) * 5;
 		tempBullet3.vy = Math.sin(gun3.angle * Math.PI/180) * 5;
-	}
-	else if(fightOption >= 3 && fightOption <= 4)
-	{
-		console.log("third attack")
 	}
 }
 
@@ -1322,6 +1433,7 @@ moveValid = function()
 }
 changeToFight = function()
 {
+	actingUp = false;
 	platform1.vx = maxSpeed;
 	actionUsed = false;
 	canHeal = true;
@@ -1370,6 +1482,8 @@ changeToPlayer = function()
 	currentState = 0;
 
 	bossSpeedDebuff = false;
+	bossDamage = 10;
+	dodge = 10;
 	
 }
 
@@ -1445,5 +1559,24 @@ function point(pl, g)
 	g.angle = radians * 180/Math.PI;
 }
 
+function startGame()
+{
+	var dx = square.x - mouse.x;
+	var dy = square.y - mouse.y;
+	var dist = Math.sqrt(dx*dx + dy * dy);
+	if(dist < square.radius())
+	{
+		currentState = 0;
+	}
+}
+function track(e)
+{
+	var rect = canvas.getBoundingClientRect();
+	mouse.x = e.clientX - rect.left;
+	mouse.y = e.clientY - rect.top;
+}
 
-
+function changeColorBack()
+{
+	player.color = "rgba(214, 18, 51, 0.2)";
+}
