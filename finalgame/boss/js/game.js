@@ -16,7 +16,7 @@ var states = [];
 var hit = false;
 var direction;
 var bulletSpeed = 12;
-var bossAttackNumbers = 20;
+var bossAttackNumbers = 30;
 
 var frictionX = .8;	
 var frictionY = .8;
@@ -63,14 +63,14 @@ player = new GameObject();
 	player.height = canvas.width/4;
 	player.x = canvas.width/2;
 	player.y = canvas.height;
-	player.color = "#ff0000";
+	player.color = "#ffffff";
 
 choice = new GameObject();
 	choice.width = canvas.width;
 	choice.height = canvas.width/4;
 	choice.x = canvas.width/2;
 	choice.y = canvas.height;
-	choice.color = "#00ff00";
+	choice.color = "#1d1d1d";
 
 
 //State 1 && 2 (Adjusted IN 2 for 2)
@@ -79,28 +79,28 @@ platform0 = new GameObject();
 		platform0.height = 300;
 		platform0.x = platform0.width/2;
 		platform0.y = canvas.height - platform0.height/2;
-		platform0.color = "#66ff33";
+		platform0.color = "#1d1d1d";
 	
 	platform1 = new GameObject();
 		platform1.width = 15;
 		platform1.height = 300;
 		platform1.x = 0;
 		platform1.y = canvas.height - platform0.height/2;
-		platform1.color = "#ff0000";
+		platform1.color = "#ffffff";
 	
 	platform2 = new GameObject();
 		platform2.width = canvas.width/2;
 		platform2.height = platform0.height;
 		platform2.x = platform0.width/2;
 		platform2.y = canvas.height - platform0.height/2;
-		platform2.color = "#00ff";
+		platform2.color = "#494949";
 	
 	platform3 = new GameObject();
 		platform3.width = canvas.width/9;
 		platform3.height = platform0.height;
 		platform3.x = platform0.width/2;
 		platform3.y = canvas.height - platform0.height/2;
-		platform3.color = "#00ffff";
+		platform3.color = "#6b6b6b";
 
 	
 	shield = new GameObject();
@@ -108,22 +108,23 @@ platform0 = new GameObject();
 		shield.height = 5;
 		shield.x = player.x;
 		shield.y = player.y - 20
+		shield.color = "#2bcdffff";
 
 	gun = new GameObject()
 		gun.x = 200;
 		gun.y = 200;
 		gun.width = 25;
-		gun.color = "blue";
+		gun.color = "orange";
 	gun2 = new GameObject()
 		gun2.x = 500;
 		gun2.y = 700;
 		gun2.width = 25;
-		gun2.color = "green";
+		gun2.color = "orange";
 	gun3 = new GameObject()
 		gun3.x = 700;
 		gun3.y = 200;
 		gun3.width = 25;
-		gun3.color = "red";
+		gun3.color = "orange";
 
 	tempBullet = new GameObject();
 		tempBullet.width = 10;
@@ -132,6 +133,7 @@ platform0 = new GameObject();
 		tempBullet.y = 10;
 		tempBullet.vy = 5;
 		tempBullet.vx = 0;
+		tempBullet.color = "rgb(255, 227, 67)";
 	tempBullet2 = new GameObject();
 		tempBullet2.width = 10;
 		tempBullet2.height = 10;
@@ -139,6 +141,7 @@ platform0 = new GameObject();
 		tempBullet2.y = gun2.y;
 		tempBullet2.vx = Math.cos(gun.angle * Math.PI/180) * 5;
 		tempBullet2.vy = Math.sin(gun.angle * Math.PI/180) * 5;
+		tempBullet2.color = "rgb(255, 227, 67)";
 	tempBullet3 = new GameObject();
 		tempBullet3.width = 10;
 		tempBullet3.height = 10;
@@ -146,14 +149,17 @@ platform0 = new GameObject();
 		tempBullet3.y = gun3.y;
 		tempBullet3.vx = Math.cos(gun.angle * Math.PI/180) * 5;
 		tempBullet3.vy = Math.sin(gun.angle * Math.PI/180) * 5;
+		tempBullet3.color = "rgb(255, 227, 67)";
 
 	canvasTrigger = new GameObject({width:canvas.width, height:canvas.height});
 
-
 states[0] = function()
 {
+
+	choice.color = "#313131";
+	player.color = "#6b6b6b";
 	context.font = "20px Georgia";
-	context.fillStyle = "#000000"
+	context.fillStyle = "#ffffff"
 	context.fillText("Health: " + playerHealth, 450, 660);
 	
 	choice.drawRect();
@@ -219,8 +225,6 @@ states[0] = function()
 }
 states[1] = function()
 {
-	
-	console.log("Attack state");
 
 	
 	platform1.x += Math.round(platform1.vx) * maxSpeed;
@@ -288,9 +292,6 @@ states[1] = function()
 }
 states[2] = function()
 {
-	context.font = "20px Georgia";
-	context.fillText("Act state", 50, 50);
-	console.log("Act state");
 
 	setTimeout(inputWait, 200);
 
@@ -389,11 +390,8 @@ states[2] = function()
 	platform3.drawRect();
 
 	context.font = "20px Georgia";
-	context.fillStyle = "#000000"
-	context.fillText("Health: " + playerHealth, 450, 370);
-
-	context.font = "20px Georgia";
 	context.fillStyle = "#FFFFFF"
+	context.fillText("Health: " + playerHealth, 450, 370);
 	context.fillText("Read Enemy Stats", platform0.x/1.5, platform0.y);
 	context.fillText("Increase Dodge", platform1.x/1.1, platform1.y);
 	context.fillText("Decrease Enemy Damage", platform2.x/1.78, platform2.y);
@@ -408,7 +406,6 @@ states[2] = function()
 }
 states[3] = function()
 {
-	console.log("Heal Items state");
 
 	setTimeout(inputWait, 200);
 
@@ -513,10 +510,8 @@ states[3] = function()
 	platform3.drawRect();
 
 	context.font = "20px Georgia";
-	context.fillStyle = "#000000"
-	context.fillText("Health: " + playerHealth, 450, 370);
-
 	context.fillStyle = "#FFFFFF"
+	context.fillText("Health: " + playerHealth, 450, 370);
 
 	if(heal1)
 	{
@@ -564,6 +559,8 @@ states[3] = function()
 
 states[4] = function()
 {
+	context.font = "20px Georgia";
+	context.fillStyle = "#FFFFFF"
 	//End of this would remove buffs/debuffs. Obviously cant yet... as theres no fight to alter!
 	if(!fightStarted)
 	{
@@ -594,7 +591,7 @@ states[4] = function()
 				hit = true;
 				if(hit)
 				{
-					player.color = "red";
+					player.color = "#2b2a2a";
 					setTimeout(changeColorBack, 500);
 					hit = false;
 					console.log("IT SHOULD CHANGE COLORS DAMMIT");
@@ -650,7 +647,7 @@ states[4] = function()
 				hit = true;
 				if(hit)
 				{
-					player.color = "red";
+					player.color = "#2b2a2a";
 					setTimeout(changeColorBack, 500);
 					hit = false;
 					console.log("IT SHOULD CHANGE COLORS DAMMIT");
@@ -776,7 +773,7 @@ states[4] = function()
 				hit = true;
 				if(hit)
 				{
-					player.color = "red";
+					player.color = "#2b2a2a";
 					setTimeout(changeColorBack, 100);
 					hit = false;
 					console.log("IT SHOULD CHANGE COLORS DAMMIT");
@@ -940,7 +937,7 @@ states[4] = function()
 				hit = true;
 				if(hit)
 				{
-					player.color = "red";
+					player.color = "#2b2a2a";
 					setTimeout(changeColorBack, 300);
 					hit = false;
 					console.log("IT SHOULD CHANGE COLORS DAMMIT");
@@ -961,7 +958,7 @@ states[4] = function()
 				hit = true;
 				if(hit)
 				{
-					player.color = "red";
+					player.color = "#2b2a2a";
 					setTimeout(changeColorBack, 300);
 					hit = false;
 					console.log("IT SHOULD CHANGE COLORS DAMMIT");
@@ -982,7 +979,7 @@ states[4] = function()
 				hit = true;
 				if(hit)
 				{
-					player.color = "red";
+					player.color = "#2b2a2a";
 					setTimeout(changeColorBack, 300);
 					hit = false;
 					console.log("IT SHOULD CHANGE COLORS DAMMIT");
@@ -1272,8 +1269,7 @@ states[6] = function()
 	//win/lose screen
 states[7] = function()
 {
-	context.fillStyle = "#000000"
-	console.log("Win/Lose screen.");
+	context.fillStyle = "#ffffff"
 
 	if(tempBossHealth <= 0)
 	{
@@ -1289,8 +1285,7 @@ states[7] = function()
 }
 states[8] = function()
 {
-	console.log("start screen");
-
+	context.fillStyle = "#ffffff"
 	context.font = "20px Georgia";
 	context.fillText("Game Prototype", 420, 200);
 	context.fillText("Click 'e' for more information!", 360, 240);
@@ -1304,6 +1299,7 @@ states[8] = function()
 }
 states[9] = function()
 {
+	context.fillStyle = "#ffffff"
 	context.font = "20px Georgia";
 	context.fillText("Controls: ", 70, 100);
 	context.fillText("- Press 'enter' to select a choice", 100, 140);
@@ -1342,7 +1338,7 @@ adjustPerAttack = function()
 			bullets[i] = new GameObject();
 			bullets[i].x = Math.random() * canvas.width;
 			bullets[i].y = Math.random()* -500;
-			bullets[i].width = 20;
+			bullets[i].width = 10;
 			if(!bossSpeedDebuff)
 			{
 				bullets[i].vy = rand(6,15);
@@ -1352,7 +1348,7 @@ adjustPerAttack = function()
 				bullets[i].vy = rand(4,8);
 			}
 			//dots[i].vx = rand(-10,10);
-			bullets[i].color = "#ff0000";
+			bullets[i].color = "rgb(255, 227, 67)";
 		}
 	}
 	else if(fightOption >= 1 && fightOption < 2)
@@ -1408,22 +1404,22 @@ fixTheAttack = function()
 		platform0.height = 300;
 		platform0.x = platform0.width/2;
 		platform0.y = canvas.height - platform0.height/2;
-		platform0.color = "#66ff33";
+		platform0.color = "#313131";
 	platform1.width = 15;
 		platform1.height = 300;
 		platform1.x = 0;
 		platform1.y = canvas.height - platform0.height/2;
-		platform1.color = "#ff0000";
+		platform1.color = "#ffffff";
 	platform2.width = canvas.width/2;
 		platform2.height = platform0.height;
 		platform2.x = platform0.width/2;
 		platform2.y = canvas.height - platform0.height/2;
-		platform2.color = "#00ff";
+		platform2.color = "#494949";
 	platform3.width = canvas.width/9;
 		platform3.height = platform0.height;
 		platform3.x = platform0.width/2;
 		platform3.y = canvas.height - platform0.height/2;
-		platform3.color = "#00ffff";
+		platform3.color = "#6b6b6b";
 
 		context.fillStyle = "#000000"
 }
@@ -1444,24 +1440,24 @@ changeToFight = function()
 		platform0.height = 300;
 		platform0.x = platform0.width/2;
 		platform0.y = canvas.height - platform0.height/2;
-		platform0.color = "#66ff33";
+		platform0.color = "#313131";
 	platform1.width = 15;
 		platform1.height = 300;
 		platform1.x = 0;
 		platform1.y = canvas.height - platform0.height/2;
-		platform1.color = "#ff0000";
+		platform1.color = "#ffffff";
 	platform2.width = canvas.width/2;
 		platform2.height = platform0.height;
 		platform2.x = platform0.width/2;
 		platform2.y = canvas.height - platform0.height/2;
-		platform2.color = "#00ff";
+		platform2.color = "#494949";
 	platform3.width = canvas.width/9;
 		platform3.height = platform0.height;
 		platform3.x = platform0.width/2;
 		platform3.y = canvas.height - platform0.height/2;
-		platform3.color = "#00ffff";
+		platform3.color = "#6b6b6b";
 
-		context.fillStyle = "#000000"
+		context.fillStyle = "#ffffff"
 
 	currentState = 4;
 }
@@ -1471,20 +1467,19 @@ changeToPlayer = function()
 	player.height = canvas.width/4;
 	player.x = canvas.width/2;
 	player.y = canvas.height;
-	player.color = "#ff0000";
+	player.color = "#6b6b6b";
 
 	choice.width = canvas.width;
 	choice.height = canvas.width/4;
 	choice.x = canvas.width/2;
 	choice.y = canvas.height;
-	choice.color = "#00ff00";
+	choice.color = "#313131";
 	fightStarted = false;
 	currentState = 0;
 
 	bossSpeedDebuff = false;
 	bossDamage = 10;
 	dodge = 10;
-	
 }
 
 changeToStateVar = function()
@@ -1578,5 +1573,5 @@ function track(e)
 
 function changeColorBack()
 {
-	player.color = "rgba(214, 18, 51, 0.2)";
+	player.color = "#FFFFFF";
 }

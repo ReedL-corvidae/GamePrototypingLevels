@@ -18,7 +18,7 @@ document.addEventListener("keyup", release);
 function press(e)
 {
 	//---This logs key codes into the browser's console.
-	console.log(e.keyCode);
+	//console.log(e.keyCode);
 	
 	if(e.keyCode == 87)
 	{
