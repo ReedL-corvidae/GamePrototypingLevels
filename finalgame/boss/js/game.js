@@ -1293,6 +1293,7 @@ states[8] = function()
 {
 	context.fillStyle = "#ffffff"
 	context.font = "20px Georgia";
+	context.fillText("Reed Linehan", 420, 150);
 	context.fillText("Game Prototype", 420, 200);
 	context.fillText("Click 'e' for more information!", 360, 240);
 	context.fillText("When ready, click the orange square to start.", 300, 280);
@@ -1307,6 +1308,8 @@ states[9] = function()
 {
 	context.fillStyle = "#ffffff"
 	context.font = "20px Georgia";
+
+	
 	context.fillText("Controls: ", 70, 100);
 	context.fillText("- Press 'enter' to select a choice", 100, 140);
 	context.fillText("- Press 'space' to time your attack", 100, 170);
