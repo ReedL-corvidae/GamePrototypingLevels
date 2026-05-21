@@ -229,6 +229,10 @@ states[1] = function()
 	
 	platform1.x += Math.round(platform1.vx) * maxSpeed;
 
+	if(bossHealth <= 0)
+	{
+		currentState = 7;
+	}
 
 	platform1.move();
 
@@ -236,11 +240,6 @@ states[1] = function()
 		//Player times hits. Only hits ONCE. Function for turns would be added later to allow for later turns again.
 	if(platform1.hitTestObject(platform0) && space && !actionUsed)
 	{
-		if(bossHealth <= 0)
-		{
-			currentState = 7;
-		} else
-		{
 		actionUsed = true;
 		if((platform1.x < platform0.x - platform0.width/4))
 		{
@@ -273,7 +272,6 @@ states[1] = function()
 			console.log("Health is " + tempBossHealth);
 		}
 		setTimeout(changeToFight, 3000);
-		}
 	}
 
 		//Lets hitbox thing hit back and forth
