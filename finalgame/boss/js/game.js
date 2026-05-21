@@ -229,10 +229,10 @@ states[1] = function()
 	
 	platform1.x += Math.round(platform1.vx) * maxSpeed;
 
-	if(bossHealth <= 0)
-	{
-		currentState = 7;
-	}
+	//if(bossHealth <= 0)
+	//{
+		//currentState = 7;
+	//}
 
 	platform1.move();
 
